@@ -1,0 +1,84 @@
+$searchedMarkerColor: #931fec;
+$searchedMarkerColor: #b269ea;
+$inputFocusColor: #f1dfff;
+$color:  #555;
+$answersBackground: #b055f5;
+$answersBackground: #c282f3;
+
+html,
+body,
+#app {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    color: $color;
+}
+
+.test-answers {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .search {
+        input {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            font-size: 1.3em;
+            padding: 0.3em;
+            color: $color;
+
+            &:focus {
+                outline: none;
+                background: $inputFocusColor;
+            }
+        }
+    }
+    .question-list {
+        flex: 1 100%;
+        position: relative;
+    }
+    .question-screen {
+        height: 100%;
+        overflow: auto;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .question-set {
+        background: #ccc;
+    }
+    .question {
+        position: relative;
+        background: #fff;
+        padding: 10px;
+        &:nth-child(odd) {
+            background-color: lighten($inputFocusColor, 4%);
+        }
+    }
+
+    .question-fade {
+        opacity: 0.35;
+    }
+
+    .question-word-searched {
+        color: $searchedMarkerColor;
+        text-shadow: 0px 0px 1px lighten($searchedMarkerColor, 3%);
+
+    }
+    .overflow {
+        font-size: 2em;
+        text-align: center;
+        font-weight: bolder;
+        color: $searchedMarkerColor;
+    }
+
+    .question-answers {
+        background: $answersBackground;
+        color: #fff;
+        padding: 0.3em;
+        list-style: none;
+    }
+
+}

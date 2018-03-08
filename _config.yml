@@ -1,0 +1,4 @@
+exclude:
+  - spa
+  - node_modules
+  - words*

@@ -1,0 +1,4 @@
+{
+{% assign query = include.q | downcase | replace: '/search/', '' %}{% for test in site.data.tests %}{% assign quetion = test[0] | downcase %}{% if quetion contains query %}{{test[0] | jsonify}}:{{test[1] | jsonify}},
+{% endif %}{% endfor %}"$$$$$":""
+}
