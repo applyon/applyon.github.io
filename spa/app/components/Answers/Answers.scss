@@ -41,13 +41,47 @@ body,
                 color:lighten($color, 35%);
             }
         }
-        .clear {
-            position: absolute;
-            right: 0.3em;
-            @extend %search;
-            
-
+    }
+    .search-tools {
+        position: absolute;
+        top: 0;
+        right: 0;
+        display: flex;
+    }
+    .search-tool {
+        display: inline-block;
+        @extend %search;
+        &:not(:first-child) {
+            padding-left: 0;
         }
+    }
+    .loading {
+        display: none;
+        &.active {
+            display: initial;
+            animation: fade-in 1.5s linear;   
+        }
+    }
+    @keyframes fade-in {
+        0% { opacity: 0; }
+        40% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+
+    .loading-indicator {
+        border-style: solid;
+        border-width: 0.2em;
+        border-color: #f3f3f3; /* Light grey */
+        border-top-color: $answersBackground;
+        border-radius: 50%;
+        width: 0.85em;
+        height: 0.85em;
+        animation: spin 2s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
     }
     .question-list {
         flex: 1 100%;

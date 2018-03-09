@@ -18,17 +18,21 @@ export class Answers extends Component {
             search: '',
             answers: [],
             searchPredicate: '',
-            expanded: null
+            expanded: null,
+            loading: false,
+            noResults: false,
+            isPoor: false
         }
 
         this.fetcher = debounce(this.fetchAnswers, 500);
     }
-    fetchAnswers = async searchWords => {
+    fetchAnswers = async (searchWords, search) => {
         const [anchor] = searchWords
             .filter(({length}) => length >= 3);
         let answers = {}
         if (anchor) {
             try {
+                this.setState({loading: true});
                 const responce = await fetch(`search/${anchor.slice(0, 3)}`);
                 if (responce.status === 200) {
                     const body = await responce.json();
@@ -40,6 +44,10 @@ export class Answers extends Component {
             } catch (e) {
             }
         }
+        // await new Promise(resolve => setTimeout(resolve, 3000));
+        if (this.state.searchWords !== searchWords) {
+            return;
+        }
         answers = sortBy(
             map(answers, (answers, question) => ({answers, question})),
             'question'
@@ -47,10 +55,16 @@ export class Answers extends Component {
         const expanded = answers.length === 1
             ? answers[0]
             : null;
+        const noResults = !isEmpty(anchor) && isEmpty(answers);
+        const isPoor = !isEmpty(search) && isEmpty(anchor);
+
         this.setState({
             answers: answers.slice(0, ANSWER_LIMIT),
             overflow: answers.length > ANSWER_LIMIT,
-            expanded
+            expanded,
+            loading: false,
+            noResults,
+            isPoor
         });
     } 
 
@@ -68,9 +82,9 @@ export class Answers extends Component {
                     .join('|'),
                 'i'
             );
-        this.setState({search, searchWords, searchPredicate, _expanded: null});
+        this.setState({search, searchWords, searchPredicate});
         const {fetcher} = this;
-        fetcher(searchWords);
+        fetcher(searchWords, search);
     }
     onSelect = (expanded) => {
         this.setState({expanded});
@@ -83,13 +97,14 @@ export class Answers extends Component {
             overflow,
             searchPredicate,
             expanded,
-            searchWords
+            searchWords,
+            loading,
+            noResults,
+            isPoor
         } = this.state;
-        const isPoor = !isEmpty(searchWords) && searchWords.every(({length}) => length < 3);
-        const noResults = !(isEmpty(searchWords) || isPoor) && isEmpty(answers);
 
         return (<div className="test-answers">
-            <Search onChange={onSearch} onClear={onClear} search={search} />
+            <Search onChange={onSearch} onClear={onClear} search={search} loading={loading} />
             {isPoor && (<div className="message">⚠️ Необходимо сочетание не менее 3ех символов</div>)}
             {noResults && (<div className="message"> Не найдено результатов</div>)}
             {overflow && (<div className="message">⚠️ Стоит указать более четкие критерии</div>)}
@@ -106,7 +121,7 @@ class Search extends Component{
         this.searchInput.focus();
     }
     render() {
-        const {onChange, search} = this.props;
+        const {onChange, search, loading} = this.props;
         const {onClear} = this;
         return <div className="search">
                 <input
@@ -118,11 +133,18 @@ class Search extends Component{
                     }
                     autoFocus
                 />
+                <div className="search-tools">
                 {
-                    search.replace(/\s+/g, '') && <span className="clear" onClick={onClear}>
-                            ❌
-                        </span>
+                    <div className={classNames('search-tool loading', {active: loading})}>
+                        <div className="loading-indicator" />
+                    </div>
                 }
+                {
+                    search.replace(/\s+/g, '') && <div className="search-tool" onClick={onClear}>
+                            ❌
+                        </div>
+                }
+                </div>
             </div>;
     }
 }
