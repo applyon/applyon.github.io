@@ -86,11 +86,13 @@ export class Answers extends Component {
             searchWords
         } = this.state;
         const isPoor = !isEmpty(searchWords) && searchWords.every(({length}) => length < 3);
+        const noResults = !(isEmpty(searchWords) || isPoor) && isEmpty(answers);
 
         return (<div className="test-answers">
             <Search onChange={onSearch} onClear={onClear} search={search} />
-            {isPoor && (<div className="message">⚠️ необходимо сочетание не менее 3ех символов</div>)}
-            {overflow && (<div className="message">⚠️ стоит указать более четкие критерии</div>)}
+            {isPoor && (<div className="message">⚠️ Необходимо сочетание не менее 3ех символов</div>)}
+            {noResults && (<div className="message"> Не найдено результатов</div>)}
+            {overflow && (<div className="message">⚠️ Стоит указать более четкие критерии</div>)}
             <QuestionList answers={answers} search={search} searchPredicate={searchPredicate} onSelect={onSelect} expanded={expanded} />
         </div>)
     }
