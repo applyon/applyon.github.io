@@ -5,6 +5,12 @@ $color:  #555;
 $answersBackground: #b055f5;
 $answersBackground: #c282f3;
 
+%search {
+    box-sizing: border-box;
+    font-size: 1.3em;
+    padding: 0.3em;
+}
+
 html,
 body,
 #app {
@@ -21,18 +27,26 @@ body,
     height: 100%;
 
     .search {
+        position: relative;
         input {
             width: 100%;
             height: 100%;
-            box-sizing: border-box;
-            font-size: 1.3em;
-            padding: 0.3em;
             color: $color;
-
+            @extend %search;
             &:focus {
                 outline: none;
                 background: $inputFocusColor;
             }
+            &::placeholder {
+                color:lighten($color, 35%);
+            }
+        }
+        .clear {
+            position: absolute;
+            right: 0.3em;
+            @extend %search;
+            
+
         }
     }
     .question-list {
@@ -46,6 +60,7 @@ body,
         position: absolute;
         top: 0;
         left: 0;
+        box-shadow: inset 0 0 0.3em 0.3em rgba(#fff, 0.3);
     }
     .question-set {
         background: #ccc;
@@ -67,11 +82,12 @@ body,
         color: $searchedMarkerColor;
         text-shadow: 2px 2px 1px rgba(#000, 0.25);
     }
-    .overflow {
-        font-size: 2em;
+    .message {
+        font-size: 0.7em;
         text-align: center;
-        font-weight: bolder;
+        //font-weight: bolder;
         color: $searchedMarkerColor;
+        padding: 0.3em;
     }
 
     .question-answers {

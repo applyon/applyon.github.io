@@ -54,7 +54,7 @@ export class Answers extends Component {
         });
     } 
 
-    onSearch = (search) => {
+    onSearch = (search = '') => {
         const searchWords = search.toLowerCase()
             .split(WORDS_DELIMITER)
             .filter(Boolean);
@@ -76,28 +76,53 @@ export class Answers extends Component {
         this.setState({expanded});
     }
     render() {
-        const {onSearch, onSelect} = this;
+        const {onSearch, onSelect, onClear} = this;
         const {
             search,
             answers,
             overflow,
             searchPredicate,
-            expanded
+            expanded,
+            searchWords
         } = this.state;
+        const isPoor = !isEmpty(searchWords) && searchWords.every(({length}) => length < 3);
 
         return (<div className="test-answers">
-            <Search onChange={onSearch} search={search} />
+            <Search onChange={onSearch} onClear={onClear} search={search} />
+            {isPoor && (<div className="message">⚠️ необходимо сочетание не менее 3ех символов</div>)}
+            {overflow && (<div className="message">⚠️ стоит указать более четкие критерии</div>)}
             <QuestionList answers={answers} search={search} searchPredicate={searchPredicate} onSelect={onSelect} expanded={expanded} />
-            {overflow && (<div className="overflow">...</div>)}
         </div>)
     }
 }
 
 
-function Search({onChange, search}) {
-    return <div className="search">
-            <input value={search} onChange={({target:{value}}) => onChange(value)} autoFocus/>
-        </div>
+class Search extends Component{
+    onClear = () => {
+        const {onChange} = this.props;
+        onChange();
+        this.searchInput.focus();
+    }
+    render() {
+        const {onChange, search} = this.props;
+        const {onClear} = this;
+        return <div className="search">
+                <input
+                    ref={searchInput => this.searchInput = searchInput}
+                    value={search}
+                    placeholder="Введите ключевые слова вопроса"
+                    onChange={
+                        ({target:{value}}) => onChange(value)
+                    }
+                    autoFocus
+                />
+                {
+                    search.replace(/\s+/g, '') && <span className="clear" onClick={onClear}>
+                            ❌
+                        </span>
+                }
+            </div>;
+    }
 }
 
 function  QuestionList({answers, search, searchPredicate, onSelect, expanded}) {
