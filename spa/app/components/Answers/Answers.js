@@ -44,7 +44,14 @@ export class Answers extends Component {
             map(answers, (answers, question) => ({answers, question})),
             'question'
         );
-        this.setState({answers: answers.slice(0, ANSWER_LIMIT), overflow: answers.length > ANSWER_LIMIT});
+        const expanded = answers.length === 1
+            ? answers[0]
+            : null;
+        this.setState({
+            answers: answers.slice(0, ANSWER_LIMIT),
+            overflow: answers.length > ANSWER_LIMIT,
+            expanded
+        });
     } 
 
     onSearch = (search) => {
@@ -61,7 +68,7 @@ export class Answers extends Component {
                     .join('|'),
                 'i'
             );
-        this.setState({search, searchWords, searchPredicate, expanded: null});
+        this.setState({search, searchWords, searchPredicate, _expanded: null});
         const {fetcher} = this;
         fetcher(searchWords);
     }
@@ -126,7 +133,12 @@ function Quetion({question, answers, searchPredicate, expanded, onSelect, fade})
                 expanded && (
                     <ul className="question-answers">
                         {
-                            answers.map((answer, index) => <li className="quetion-answer"  key={answer+index}>{answer}</li>)
+                            answers.map(
+                                (answer, index) => 
+                                    <li className="question-answer"  key={answer+index}>
+                                        <span className="question-answer-tytle">{answer}</span>
+                                    </li>
+                                )
                         }
                     </ul>
                 )

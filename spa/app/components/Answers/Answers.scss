@@ -40,6 +40,7 @@ body,
         position: relative;
     }
     .question-screen {
+        width: 100%;
         height: 100%;
         overflow: auto;
         position: absolute;
@@ -64,8 +65,7 @@ body,
 
     .question-word-searched {
         color: $searchedMarkerColor;
-        text-shadow: 0px 0px 1px lighten($searchedMarkerColor, 3%);
-
+        text-shadow: 2px 2px 1px rgba(#000, 0.25);
     }
     .overflow {
         font-size: 2em;
@@ -76,9 +76,14 @@ body,
 
     .question-answers {
         background: $answersBackground;
-        color: #fff;
+        color: $answersBackground;
         padding: 0.3em;
-        list-style: none;
+        margin-left: 0.5em;
+        list-style-type: circle;
+    }
+    
+    .question-answer-tytle {
+        color: #fff;
     }
 
 }
